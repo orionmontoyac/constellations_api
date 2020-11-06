@@ -2,9 +2,9 @@ from ..constellations.models import Star
 
 def test_new_star():
     """
-    GIVEN a User model
-    WHEN a new User is created
-    THEN check the email, hashed_password, and role fields are defined correctly
+    GIVEN a Star model
+    WHEN a new Star is created
+    THEN check all the atts for a Star and check if are defined correctly
     """
     star = Star('α And', 'α', '01h 09m 43.80s', '+35° 37′ 15.0″','2.07','−1.86','199')
     assert star.name == 'α And'
