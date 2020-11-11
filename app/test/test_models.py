@@ -13,4 +13,4 @@ def test_new_star():
     assert star.declination == '+35° 37′ 15.0″'
     assert star.apparent_magnitude == '2.07'
     assert star.absolute_magnitude == '−1.86'
-    assert star.distance == '199--'
+    assert star.distance == '199'
