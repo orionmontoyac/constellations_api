@@ -49,13 +49,13 @@ def register_error_handlers(app):
     def handle_403_error(e):
         return jsonify({'msg': 'Forbidden error'}), 403
 
-    @app.errorhandler(404)
+    @app.errorhandler(ObjectNotFound)
     def handle_404_error(e):
-        return jsonify({'msg': 'Not Found error'}), 404
+        return jsonify({'error': str(e)}), 404
 
     @app.errorhandler(AppErrorBaseClass)
     def handle_app_base_error(e):
-        return jsonify({'msg': str(e)}), 500
+        return jsonify({'error': str(e)}), 500
 
     @app.errorhandler(InvalidToken)
     def handle_object_not_found_error(e):

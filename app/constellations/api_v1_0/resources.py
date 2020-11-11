@@ -1,15 +1,16 @@
 from flask import request, Blueprint
 from flask_restful import Api, Resource
 from werkzeug.exceptions import BadRequest
-from .schemas import ConstellationSchema
+from .schemas import ConstellationSchema, StarSchema
 from ..models import Constellation, Star
-from app.common.error_handling import InvalidToken
+from app.common.error_handling import InvalidToken, ObjectNotFound
 
 # from ...ext import ObjectNotFound
 
 constellations_v1_0_bp = Blueprint('constellations_v1_0_bp', __name__)
 
 constellation_schema = ConstellationSchema()
+star_schema = StarSchema()
 
 api = Api(constellations_v1_0_bp)
 
@@ -43,8 +44,19 @@ class ConstellationListResource(Resource):
 class ConstellationResource(Resource):
     def get(self, constellation_id):
         constellation = Constellation.get_by_id(constellation_id)
+        query_parameters = request.args
         if constellation is None:
             return {"ERROR": "Constellation id no valid"}#raise #ObjectNotFound('La constelacion no existe')
+        
+        if query_parameters.get('star') != None:
+            star_id = query_parameters.get('star')
+            try:
+                star = constellation.stars[int(star_id)]   
+                return star_schema.dump(star)
+            except IndexError:
+                raise ObjectNotFound("Star {} in Constellation {} not found".format(star_id,constellation))
+            
+        
         resp = constellation_schema.dump(constellation)
         return resp
 
@@ -53,4 +65,3 @@ api.add_resource(ConstellationListResource, '/api/v1.0/constellations/',
 
 api.add_resource(ConstellationResource, '/api/v1.0/constellations/<int:constellation_id>',
                  endpoint='constellation_resource')
-

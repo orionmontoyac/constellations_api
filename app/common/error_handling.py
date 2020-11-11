@@ -5,6 +5,5 @@ class InvalidToken(Exception):
     pass
 
 
-class ObjectNotFound(AppErrorBaseClass):
-    def __init__(self, msg):
-        raise 405
+class ObjectNotFound(Exception):
+    pass
