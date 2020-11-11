@@ -44,7 +44,9 @@ class ConstellationListResource(Resource):
 class ConstellationResource(Resource):
     def get(self, constellation_id):
         constellation = Constellation.get_by_id(constellation_id)
+        
         query_parameters = request.args
+
         if constellation is None:
             return {"ERROR": "Constellation id no valid"}#raise #ObjectNotFound('La constelacion no existe')
         
@@ -55,7 +57,8 @@ class ConstellationResource(Resource):
                 return star_schema.dump(star)
             except IndexError:
                 raise ObjectNotFound("Star {} in Constellation {} not found".format(star_id,constellation))
-            
+            except ValueError:
+                raise ObjectNotFound("Star id '{}' is not a integer".format(star_id))
         
         resp = constellation_schema.dump(constellation)
         return resp
