@@ -5,6 +5,7 @@ from flask_restful import Api, Resource
 from api.utils.database import ConstellationModel
 from api.utils.database import StarModel
 from api.schemas.schemas import StarSchema
+from api.utils.error_handling import ObjectNotFound
 
 stars_v1_bp = Blueprint('stars_v1_bp', __name__)
 api = Api(stars_v1_bp)
@@ -22,7 +23,7 @@ class StarList(Resource):
         # Get constellation
         constellation = ConstellationModel.query.get(constellation_id)
         if constellation is None:
-            return "Constellation not found.", HTTPStatus.NOT_FOUND
+            raise ObjectNotFound("Constellations with id {} not found.".format(constellation_id))
         # Get stars
         stars = constellation.stars
 
@@ -43,7 +44,8 @@ class Star(Resource):
         ).first()
 
         if star is None:
-            return "Star not found.", HTTPStatus.NOT_FOUND
+            raise ObjectNotFound(
+                "Start with id {} in constellations with id {} not found.".format(star_id, constellation_id))
 
         return stars_schema.dump(star, many=False), HTTPStatus.OK
 

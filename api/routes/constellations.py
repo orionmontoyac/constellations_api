@@ -4,6 +4,7 @@ from flask_restful import Api, Resource
 
 from api.utils.database import ConstellationModel
 from api.schemas.schemas import ConstellationSchema
+from api.utils.error_handling import ObjectNotFound
 
 constellations_v1_bp = Blueprint('constellations_v1_bp', __name__)
 api = Api(constellations_v1_bp)
@@ -48,7 +49,7 @@ class Constellation(Resource):
         # Get constellation
         constellation = ConstellationModel.query.get(constellation_id)
         if constellation is None:
-            return "Constellation not found.", HTTPStatus.NOT_FOUND
+            raise ObjectNotFound("Constellations with id {} not found.".format(constellation_id))
 
         return constellations_schema.dump(constellation), HTTPStatus.OK
 
@@ -74,7 +75,7 @@ class Constellation(Resource):
         # Get constellation
         constellation = ConstellationModel.query.get(constellation_id)
         if constellation is None:
-            return "Constellation not found.", HTTPStatus.NOT_FOUND
+            raise ObjectNotFound("Constellations with id {} not found.".format(constellation_id))
 
         # Delete constellation
         constellation.delete(constellation_id)

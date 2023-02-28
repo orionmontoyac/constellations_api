@@ -1,4 +1,4 @@
-# Constellations API
+# Constellations API made in Flask
 
 ### Endpoints:
 1. __GET all constellations:__ /api/v1/constellations

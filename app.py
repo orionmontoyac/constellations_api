@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from api.utils.database import db
 from api.routes.constellations import constellations_v1_bp
 from api.routes.stars import stars_v1_bp
+from api.utils.error_handling import errors_v1_bp
 
 
 def create_app() -> Flask:
@@ -12,6 +13,8 @@ def create_app() -> Flask:
     new_app.config['SWAGGER'] = {
         'title': 'Flask API Starter Kit',
     }
+    new_app.config['PROPAGATE_EXCEPTIONS'] = True
+
     # config data base
     db.init_app(new_app)
     Migrate(new_app, db, render_as_batch=True)
@@ -22,6 +25,9 @@ def create_app() -> Flask:
     # Blue prints
     new_app.register_blueprint(constellations_v1_bp)
     new_app.register_blueprint(stars_v1_bp)
+
+    # Custom error handlers
+    new_app.register_blueprint(errors_v1_bp)
 
     return new_app
 
