@@ -2,7 +2,7 @@ from http import HTTPStatus
 from flask import request, Blueprint, jsonify
 from flask_restful import Api, Resource
 
-from api.utils.database import Constellation
+from api.utils.database import ConstellationModel
 from api.schemas.schemas import ConstellationSchema
 
 constellations_v1_bp = Blueprint('constellations_v1_bp', __name__)
@@ -17,36 +17,55 @@ class ConstellationList(Resource):
     def get():
         """
         GET all constellations.
-        RETURN List of Constellations List[Constellation]
+        RETURN List of Constellations List[ConstellationModel]
         """
-        constellations = Constellation.get_all_constellations()
-        return constellations_schema.dump(constellations, many=True), 200
+        constellations = ConstellationModel.get_all_constellations()
+        return constellations_schema.dump(constellations, many=True), HTTPStatus.OK
 
     @staticmethod
     def post():
         """
         POST add 1 or more constellations.
-        BODY List of Constellations List[Constellation]
+        BODY List of Constellations List[ConstellationModel]
         """
         data = request.get_json()
         for constellation_raw in data:
             # Check constellation model
-            constellation = Constellation(**constellation_raw)
+            constellation = ConstellationModel(**constellation_raw)
             # Save constellation to DB
             constellation.save()
 
         return "Constellation(s) saved", HTTPStatus.CREATED
 
 
-class GetConstellation(Resource):
+class Constellation(Resource):
     @staticmethod
     def get(constellation_id: int):
-        constellation = Constellation.query.get(constellation_id)
-        print(constellation)
-        return "One Constellation", HTTPStatus.OK
+        """
+        GET on constellation by id number
+        RETURN one single constellation ConstellationModel
+        """
+        constellation = ConstellationModel.query.get(constellation_id)
+        if constellation is None:
+            return "Constellation not found.", HTTPStatus.NOT_FOUND
+
+        return constellations_schema.dump(constellation), HTTPStatus.OK
+
+    @staticmethod
+    def put(constellation_id):
+        """
+        UPDATE one single constellation by id number
+        BODY one constellation ConstellationModel
+        """
+        data = request.get_json()
+        # Check constellation model
+        constellation = ConstellationModel(**data)
+        constellation_updated = constellation.update(constellation_id, data)
+
+        return constellations_schema.dump(constellation_updated), HTTPStatus.OK
 
 
 api.add_resource(ConstellationList, '/api/v1/constellations',
                  endpoint='constellation_list')
-api.add_resource(GetConstellation, '/api/v1/constellation/<int:constellation_id>',
+api.add_resource(Constellation, '/api/v1/constellation/<int:constellation_id>',
                  endpoint='get_constellation')
