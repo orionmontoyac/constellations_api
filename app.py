@@ -1,18 +1,24 @@
 from flask import Flask
-from api.routes.home import home_api
-from api.routes.constellations import constellations_v1_bp
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 
+from api.utils.database import db
+from api.routes.constellations import constellations_v1_bp
 
 def create_app() -> Flask:
     new_app = Flask(__name__)
-
+    new_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///constellations.sqlite3'
     new_app.config['SWAGGER'] = {
         'title': 'Flask API Starter Kit',
     }
+    # config data base
+    db.init_app(new_app)
+    Migrate(new_app, db, render_as_batch=True)
 
     # Initialize Config
     new_app.config.from_pyfile('config.py')
-    new_app.register_blueprint(home_api, url_prefix='/api')
+
+    # Blue prints
     new_app.register_blueprint(constellations_v1_bp)
 
     return new_app

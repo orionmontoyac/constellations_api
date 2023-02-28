@@ -1,4 +1,11 @@
 # Constellations API
+### Setup local DB.
+For this project is used a sqlite data base. To create de DB we use flask_migrate, run:
+```
+    flask db init
+    flask db migrate
+    flask db upgrade
+```
 
 ## Endpoints:
 #### GET all contellations: 
