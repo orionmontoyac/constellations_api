@@ -4,7 +4,7 @@ from flask_restful import Api, Resource
 
 from api.utils.database import ConstellationModel
 from api.schemas.schemas import ConstellationSchema
-from api.utils.error_handling import ObjectNotFound
+from api.utils.error_handling import ObjectNotFound, BadInputModel
 
 constellations_v1_bp = Blueprint('constellations_v1_bp', __name__)
 api = Api(constellations_v1_bp)
@@ -32,7 +32,11 @@ class ConstellationList(Resource):
         data = request.get_json()
         for constellation_raw in data:
             # Check constellation model
-            constellation = ConstellationModel(**constellation_raw)
+            try:
+                constellation = ConstellationModel(**constellation_raw)
+            except TypeError as e:
+                raise BadInputModel(message="Input validation error.", errors=e)
+
             # Save constellation to DB
             constellation.save()
 
@@ -61,7 +65,10 @@ class Constellation(Resource):
         """
         data = request.get_json()
         # Check constellation model
-        constellation = ConstellationModel(**data)
+        try:
+            constellation = ConstellationModel(**data)
+        except TypeError as e:
+            raise BadInputModel(message="Input validation error.", errors=e)
         # Update constellation
         constellation_updated = constellation.update(constellation_id, data)
 

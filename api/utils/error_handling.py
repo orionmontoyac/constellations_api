@@ -1,6 +1,7 @@
 from http import HTTPStatus
 from flask import jsonify, Blueprint
 
+
 errors_v1_bp = Blueprint('errors', __name__)
 
 
@@ -13,11 +14,30 @@ class ObjectNotFound(Exception):
         self.message = message
 
 
+class BadInputModel(TypeError):
+    status_code = 400
+
+    def __init__(self, message, errors):
+        Exception.__init__(self)
+        self.message = message
+        self.errors = errors
+
+
 # Handlers
 @errors_v1_bp.app_errorhandler(ObjectNotFound)
 def not_found(error):
     response = {
         'message': error.message
+    }
+
+    return jsonify(response), error.status_code
+
+
+@errors_v1_bp.app_errorhandler(BadInputModel)
+def not_found(error):
+    response = {
+        "message": error.message,
+        "errors": error.errors.__str__()
     }
 
     return jsonify(response), error.status_code
