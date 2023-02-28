@@ -45,6 +45,7 @@ class Constellation(Resource):
         GET on constellation by id number
         RETURN one single constellation ConstellationModel
         """
+        # Get constellation
         constellation = ConstellationModel.query.get(constellation_id)
         if constellation is None:
             return "Constellation not found.", HTTPStatus.NOT_FOUND
@@ -60,9 +61,25 @@ class Constellation(Resource):
         data = request.get_json()
         # Check constellation model
         constellation = ConstellationModel(**data)
+        # Update constellation
         constellation_updated = constellation.update(constellation_id, data)
 
         return constellations_schema.dump(constellation_updated), HTTPStatus.OK
+
+    @staticmethod
+    def delete(constellation_id):
+        """
+        DELETE on single constellation by id
+        """
+        # Get constellation
+        constellation = ConstellationModel.query.get(constellation_id)
+        if constellation is None:
+            return "Constellation not found.", HTTPStatus.NOT_FOUND
+
+        # Delete constellation
+        constellation.delete(constellation_id)
+
+        return "Constellation deleted", HTTPStatus.OK
 
 
 api.add_resource(ConstellationList, '/api/v1/constellations',

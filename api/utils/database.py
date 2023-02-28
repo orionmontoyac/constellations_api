@@ -31,6 +31,12 @@ class ConstellationModel(db.Model):
         db.session.commit()
 
     @staticmethod
+    def delete(constellation_id: int):
+        constellation = db.session.query(ConstellationModel).filter(ConstellationModel.id == constellation_id).one()
+        db.session.delete(constellation)
+        db.session.commit()
+
+    @staticmethod
     def update(constellation_id: int, constellation_update: Dict):
         constellation = db.session.query(ConstellationModel).filter(ConstellationModel.id == constellation_id).one()
 
