@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from flask import request, Blueprint, jsonify
+from flask import request, Blueprint
 from flask_restful import Api, Resource
 
 from api.utils.database import ConstellationModel

@@ -1,9 +1,10 @@
 from flask import Flask
 from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
 
 from api.utils.database import db
 from api.routes.constellations import constellations_v1_bp
+from api.routes.stars import stars_v1_bp
+
 
 def create_app() -> Flask:
     new_app = Flask(__name__)
@@ -20,6 +21,7 @@ def create_app() -> Flask:
 
     # Blue prints
     new_app.register_blueprint(constellations_v1_bp)
+    new_app.register_blueprint(stars_v1_bp)
 
     return new_app
 
