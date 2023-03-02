@@ -3,8 +3,8 @@ import json
 import pytest
 
 from app import create_app
-from test.routes.data_constellations import GET_CONSTELLATIONS_RESPONSE_OK
 from api.schemas.schemas import ConstellationSchema
+from test.routes.data_constellations import ALL_CONSTELLATIONS_RESPONSE, NEW_CONSTELLATION_REQUEST
 
 
 @pytest.fixture
@@ -19,19 +19,25 @@ def client():
 
 
 class TestConstellation:
-    def test_get_all_constellations_ok(self, client):
-        url = "/api/v1/constellations"
-        response = client.get(url, data=json.dumps(GET_CONSTELLATIONS_RESPONSE_OK))
-        data = response.get_json()
+
+    def setup_method(self):
+        self.url = "/api/v1/constellations"
+
+    def test_get_all_constellations_ok(self, client, mocker):
+        mock = mocker.patch('api.utils.database.ConstellationModel.get_all_constellations')
+        mock.return_value = ALL_CONSTELLATIONS_RESPONSE
+
+        response = client.get(self.url)
 
         assert response.status_code == 200
         # Check data response schema
         constellation_schema = ConstellationSchema()
         constellation_schema.load(response.get_json(), many=True)
 
+    def test_post_create_constellation_ok(self, client, mocker):
+        mocker.patch('api.utils.database.ConstellationModel.save')
 
-"""
-def test_health(client):
-    assert client.get("/health").status_code == 200
-"""
+        response = client.post(self.url, json=NEW_CONSTELLATION_REQUEST)
 
+        assert response.status_code == 201
+        assert response.json == "Constellation(s) saved"
