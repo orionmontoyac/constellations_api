@@ -50,8 +50,15 @@ class ConstellationModel(db.Model):
         return constellation
 
     @classmethod
+    def get_one_constellation(cls, constellation_id: int):
+        # Get one constellation by id
+        constellation = cls.query.filter_by(id=constellation_id).first()
+
+        return constellation
+
+    @classmethod
     def get_all_constellations(cls):
-        # Get all constellation sorted by name
+        # Get all constellations sorted by name
         constellations = cls.query.order_by(cls.name).all()
 
         return constellations

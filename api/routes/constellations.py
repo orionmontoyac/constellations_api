@@ -51,7 +51,7 @@ class Constellation(Resource):
         RETURN one single constellation ConstellationModel
         """
         # Get constellation
-        constellation = ConstellationModel.query.get(constellation_id)
+        constellation = ConstellationModel.get_one_constellation(constellation_id)
         if constellation is None:
             raise ObjectNotFound("Constellations with id {} not found.".format(constellation_id))
 
