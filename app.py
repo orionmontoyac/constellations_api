@@ -3,8 +3,17 @@ from flask_migrate import Migrate
 
 from api.utils.database import db
 from api.routes.constellations import constellations_v1_bp
+from api.routes.home import home_v1_bp
 from api.routes.stars import stars_v1_bp
 from api.utils.error_handling import errors_v1_bp
+
+# TODO: Add logs
+# TODO: Add api key
+# TODO: Add more unit test
+# TODO: Add home page
+# TODO: Add config file
+# TODO: Integrate third party API
+# TODO: Add health check
 
 
 def create_app() -> Flask:
@@ -23,6 +32,7 @@ def create_app() -> Flask:
     new_app.config.from_pyfile('config.py')
 
     # Blue prints
+    new_app.register_blueprint(home_v1_bp)
     new_app.register_blueprint(constellations_v1_bp)
     new_app.register_blueprint(stars_v1_bp)
 
