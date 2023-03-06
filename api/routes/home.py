@@ -2,7 +2,7 @@ from http import HTTPStatus
 from flask import Blueprint
 from flask_restful import Api, Resource
 
-home_v1_bp = Blueprint('api', __name__)
+home_v1_bp = Blueprint('home_v1_bp', __name__)
 api = Api(home_v1_bp)
 
 

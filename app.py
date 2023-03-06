@@ -2,8 +2,9 @@ from flask import Flask
 from flask_migrate import Migrate
 
 from api.utils.database import db
-from api.routes.constellations import constellations_v1_bp
 from api.routes.home import home_v1_bp
+from api.routes.health_check import health_v1_bp
+from api.routes.constellations import constellations_v1_bp
 from api.routes.stars import stars_v1_bp
 from api.utils.error_handling import errors_v1_bp
 
@@ -33,6 +34,7 @@ def create_app() -> Flask:
 
     # Blue prints
     new_app.register_blueprint(home_v1_bp)
+    new_app.register_blueprint(health_v1_bp)
     new_app.register_blueprint(constellations_v1_bp)
     new_app.register_blueprint(stars_v1_bp)
 
