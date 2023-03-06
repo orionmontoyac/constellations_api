@@ -41,3 +41,37 @@ NEW_CONSTELLATION_REQUEST = [
         ]
     }
 ]
+
+UPDATE_CONSTELLATION_REQUEST = {
+    "name": "Andromeda333",
+    "abbr": "And",
+    "right_ascension": "00h 40m to 02h 50m",
+    "stars": [
+        {
+            "name": "Alpheratz22"
+        },
+        {
+            "name": "Mirach"
+        },
+        {
+            "name": "Adhil"
+        }
+    ]
+}
+
+UPDATE_CONSTELLATION_BAD_REQUEST = {
+    "name_conste": "Andromeda333",
+    "abbr": "And",
+    "right_ascension": "00h 40m to 02h 50m",
+    "stars": [
+        {
+            "name": "Alpheratz22"
+        },
+        {
+            "name": "Mirach"
+        },
+        {
+            "name": "Adhil"
+        }
+    ]
+}

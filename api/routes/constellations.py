@@ -66,11 +66,17 @@ class Constellation(Resource):
         data = request.get_json()
         # Check constellation model
         try:
-            constellation = ConstellationModel(**data)
+            ConstellationModel(**data)
         except TypeError as e:
             raise BadInputModel(message="Input validation error.", errors=e)
+
+        # Get constellation
+        constellation = ConstellationModel.get_one_constellation(constellation_id)
+        if constellation is None:
+            raise ObjectNotFound("Constellations with id {} not found.".format(constellation_id))
+
         # Update constellation
-        constellation_updated = constellation.update(constellation_id, data)
+        constellation_updated = constellation.update(constellation, data)
 
         return constellations_schema.dump(constellation_updated), HTTPStatus.OK
 
@@ -80,7 +86,7 @@ class Constellation(Resource):
         DELETE on single constellation by id
         """
         # Get constellation
-        constellation = ConstellationModel.query.get(constellation_id)
+        constellation = ConstellationModel.get_one_constellation(constellation_id)
         if constellation is None:
             raise ObjectNotFound("Constellations with id {} not found.".format(constellation_id))
 

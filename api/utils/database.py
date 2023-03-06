@@ -37,17 +37,15 @@ class ConstellationModel(db.Model):
         db.session.commit()
 
     @staticmethod
-    def update(constellation_id: int, constellation_update: Dict):
-        constellation = db.session.query(ConstellationModel).filter(ConstellationModel.id == constellation_id).one()
-
-        constellation.name = constellation_update["name"]
-        constellation.abbr = constellation_update["abbr"]
-        constellation.right_ascension = constellation_update["right_ascension"]
-        constellation.stars = [StarModel(**star) for star in constellation_update["stars"]]
+    def update(constellation_current, constellation_update):
+        constellation_current.name = constellation_update["name"]
+        constellation_current.abbr = constellation_update["abbr"]
+        constellation_current.right_ascension = constellation_update["right_ascension"]
+        constellation_current.stars = [StarModel(**star) for star in constellation_update["stars"]]
 
         db.session.commit()
 
-        return constellation
+        return constellation_current
 
     @classmethod
     def get_one_constellation(cls, constellation_id: int):
