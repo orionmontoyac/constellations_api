@@ -1,7 +1,17 @@
 
 """[General Configuration Params]
 """
-from os import environ, path
 
-basedir = path.abspath(path.dirname(__file__))
+
+class Config(object):
+    DEBUG = True
+    SWAGGER = {
+        'title': 'Flask Constellations API Docs',
+    }
+    PROPAGATE_EXCEPTIONS = True
+
+
+class DevelopmentConfig(Config):
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///constellations.sqlite3'
+
 
