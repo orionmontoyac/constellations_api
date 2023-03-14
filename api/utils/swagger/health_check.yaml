@@ -1,0 +1,11 @@
+health_check_get:
+  tags:
+    - Health Check
+  description: Check the health of the API.
+  responses:
+    200:
+      description: Returns a pong.
+      schema:
+        response:
+          type: string
+          example: Constellations API is Healthy. Date

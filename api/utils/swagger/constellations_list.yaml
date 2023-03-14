@@ -67,3 +67,7 @@ constellations_list_post:
   responses:
     200:
       description: Constellation save confirmation.
+      schema:
+        type: string
+        example: Constellation(s) saved
+

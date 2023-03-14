@@ -1,0 +1,96 @@
+constellation_get:
+  tags:
+    - Constellation
+  description: Return on single constellation by id.
+  parameters:
+    - in: path
+      name: constellation_id
+      description: Integer number constellation_id in the inclusive range of [1, 88].
+      type: integer
+      required: true
+  responses:
+    200:
+      description: A one constellation object.
+      schema:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: Andromeda
+            abbr:
+              type: string
+              example: And
+            right_ascension:
+              type: string
+              example: 00h 40m to 02h 50m
+            stars:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: int
+                    example: 1
+                  name:
+                    type: string
+                    example: Alfa andromeda
+
+constellation_put:
+  tags:
+    - Constellation
+  description: Updated on constellations by id.
+  parameters:
+    - in: path
+      name: constellation_id
+      description: Integer number constellation_id in the inclusive range of [1, 88].
+      type: integer
+      required: true
+  responses:
+    200:
+      description: A one constellation object.
+      schema:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: Andromeda
+            abbr:
+              type: string
+              example: And
+            right_ascension:
+              type: string
+              example: 00h 40m to 02h 50m
+            stars:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: int
+                    example: 1
+                  name:
+                    type: string
+                    example: Alfa andromeda
+
+constellation_delete:
+  tags:
+    - Constellation
+  description: Delete on constellations by id.
+  parameters:
+    - in: path
+      name: constellation_id
+      description: Integer number constellation_id in the inclusive range of [1, 88].
+      type: integer
+      required: true
+  responses:
+    200:
+      description: A one constellation object.
+      schema:
+          type: string
+          example: Constellation deleted

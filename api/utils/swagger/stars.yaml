@@ -1,0 +1,62 @@
+star_list_get:
+  tags:
+    - Stars
+  description: Return the list of stars of a constellation.
+  parameters:
+    - in: path
+      name: constellation_id
+      description: Integer number constellation_id in the inclusive range of [1, 88].
+      type: integer
+      required: true
+  responses:
+    200:
+      description: A list of stars.
+      schema:
+          type: array
+          items:
+            type: object
+            properties:
+              stars:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: int
+                      example: 1
+                    name:
+                      type: string
+                      example: Alfa andromeda
+
+star_get:
+  tags:
+    - Stars
+  description: Return one star from a given constellation.
+  parameters:
+    - in: path
+      name: constellation_id
+      description: Integer number constellation_id in the inclusive range of [1, 88].
+      type: integer
+      required: true
+    - in: path
+      name: star_id
+      description: Integer number star_id
+      type: integer
+      required: true
+  responses:
+    200:
+      description: A one single star.
+      schema:
+        type: object
+        properties:
+          stars:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: int
+                  example: 1
+                name:
+                  type: string
+                  example: Alfa andromeda

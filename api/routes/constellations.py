@@ -6,8 +6,7 @@ from flasgger import swag_from
 from api.utils.database import ConstellationModel
 from api.schemas.schemas import ConstellationSchema
 from api.utils.error_handling import ObjectNotFound, BadInputModel
-from api.utils.swagger.swagger_docs import CONSTELLATIONS_LIST_GET_DOCS
-from api.utils.swagger.swagger_docs import CONSTELLATIONS_LIST_POST_DOCS
+import api.utils.swagger.swagger_docs as swagger_docs
 
 constellations_v1_bp = Blueprint('constellations_v1_bp', __name__)
 api = Api(constellations_v1_bp)
@@ -18,7 +17,7 @@ constellations_schema = ConstellationSchema()
 
 class ConstellationList(Resource):
     @staticmethod
-    @swag_from(CONSTELLATIONS_LIST_GET_DOCS)
+    @swag_from(swagger_docs.CONSTELLATIONS_LIST_GET_DOCS)
     def get():
         """
         GET all constellations.
@@ -28,7 +27,7 @@ class ConstellationList(Resource):
         return constellations_schema.dump(constellations, many=True), HTTPStatus.OK
 
     @staticmethod
-    @swag_from(CONSTELLATIONS_LIST_POST_DOCS)
+    @swag_from(swagger_docs.CONSTELLATIONS_LIST_POST_DOCS)
     def post():
         """
         POST add 1 or more constellations.
@@ -50,6 +49,7 @@ class ConstellationList(Resource):
 
 class Constellation(Resource):
     @staticmethod
+    @swag_from(swagger_docs.CONSTELLATION_GET_DOCS)
     def get(constellation_id: int):
         """
         GET on constellation by id number
@@ -63,6 +63,7 @@ class Constellation(Resource):
         return constellations_schema.dump(constellation), HTTPStatus.OK
 
     @staticmethod
+    @swag_from(swagger_docs.CONSTELLATION_PUT_DOCS)
     def put(constellation_id):
         """
         UPDATE one single constellation by id number
@@ -86,6 +87,7 @@ class Constellation(Resource):
         return constellations_schema.dump(constellation_updated), HTTPStatus.OK
 
     @staticmethod
+    @swag_from(swagger_docs.CONSTELLATION_DELETE_DOCS)
     def delete(constellation_id):
         """
         DELETE on single constellation by id
