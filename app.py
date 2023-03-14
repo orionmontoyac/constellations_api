@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_migrate import Migrate
+from flasgger import Swagger
 
 import config
 from api.utils.database import db
@@ -23,6 +24,8 @@ def create_app() -> Flask:
     # Initialize Config
     new_app.config.from_object(config.DevelopmentConfig)
 
+    # swagger docs
+    swagger = Swagger(new_app)
     # config data base
     db.init_app(new_app)
     Migrate(new_app, db, render_as_batch=True)

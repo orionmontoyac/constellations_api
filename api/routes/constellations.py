@@ -1,10 +1,13 @@
 from http import HTTPStatus
 from flask import request, Blueprint
 from flask_restful import Api, Resource
+from flasgger import swag_from
 
 from api.utils.database import ConstellationModel
 from api.schemas.schemas import ConstellationSchema
 from api.utils.error_handling import ObjectNotFound, BadInputModel
+from api.utils.swagger.swagger_docs import CONSTELLATIONS_LIST_GET_DOCS
+from api.utils.swagger.swagger_docs import CONSTELLATIONS_LIST_POST_DOCS
 
 constellations_v1_bp = Blueprint('constellations_v1_bp', __name__)
 api = Api(constellations_v1_bp)
@@ -15,6 +18,7 @@ constellations_schema = ConstellationSchema()
 
 class ConstellationList(Resource):
     @staticmethod
+    @swag_from(CONSTELLATIONS_LIST_GET_DOCS)
     def get():
         """
         GET all constellations.
@@ -24,6 +28,7 @@ class ConstellationList(Resource):
         return constellations_schema.dump(constellations, many=True), HTTPStatus.OK
 
     @staticmethod
+    @swag_from(CONSTELLATIONS_LIST_POST_DOCS)
     def post():
         """
         POST add 1 or more constellations.

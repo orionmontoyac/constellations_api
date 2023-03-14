@@ -1,0 +1,12 @@
+# Swagger docs for home_v1_bp endpoints.
+home_get:
+  tags:
+    - Home
+  description: Get Constellations API version.
+  responses:
+    200:
+      description: Returns constellations API version.
+      schema:
+        response:
+          type: string
+          example: Wellcome to constellation API. Version 1.0
