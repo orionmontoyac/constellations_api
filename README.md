@@ -1,5 +1,9 @@
 # Constellations API made in Flask
 
+### Run with docker
+```
+docker run -p 5000:5000 constellations_app
+```
 ### Endpoints:
 1. __GET all constellations:__ /api/v1/constellations
 <details>
