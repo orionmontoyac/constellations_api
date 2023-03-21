@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  constellations_api_postgres_db:
+    image: postgres
+    restart: always
+    container_name: ${PG_CONTAINER_NAME}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+       - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
