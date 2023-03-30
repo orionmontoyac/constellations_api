@@ -9,7 +9,7 @@ from api.schemas.schemas import StarSchema
 from api.utils.error_handling import ObjectNotFound
 import api.utils.swagger.swagger_docs as swagger_docs
 
-stars_v1_bp = Blueprint('stars_v1_bp', __name__)
+stars_v1_bp = Blueprint("stars_v1_bp", __name__)
 api = Api(stars_v1_bp)
 
 stars_schema = StarSchema()
@@ -26,7 +26,9 @@ class StarList(Resource):
         # Get constellation
         constellation = ConstellationModel.query.get(constellation_id)
         if constellation is None:
-            raise ObjectNotFound("Constellations with id {} not found.".format(constellation_id))
+            raise ObjectNotFound(
+                "Constellations with id {} not found.".format(constellation_id)
+            )
         # Get stars
         stars = constellation.stars
 
@@ -43,18 +45,24 @@ class Star(Resource):
         """
         # Get constellation
         star = StarModel.query.filter_by(
-            constellation_id=constellation_id,
-            id=star_id
+            constellation_id=constellation_id, id=star_id
         ).first()
 
         if star is None:
             raise ObjectNotFound(
-                "Start with id {} in constellations with id {} not found.".format(star_id, constellation_id))
+                "Start with id {} in constellations with id {} not found.".format(
+                    star_id, constellation_id
+                )
+            )
 
         return stars_schema.dump(star, many=False), HTTPStatus.OK
 
 
-api.add_resource(StarList, '/api/v1/constellation/<int:constellation_id>/stars',
-                 endpoint='star_list')
-api.add_resource(Star, '/api/v1/constellation/<int:constellation_id>/stars/<int:star_id>',
-                 endpoint='star')
+api.add_resource(
+    StarList, "/api/v1/constellation/<int:constellation_id>/stars", endpoint="star_list"
+)
+api.add_resource(
+    Star,
+    "/api/v1/constellation/<int:constellation_id>/stars/<int:star_id>",
+    endpoint="star",
+)

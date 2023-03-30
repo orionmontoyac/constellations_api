@@ -5,7 +5,7 @@ from flask_restful import Api, Resource
 
 from api.utils.swagger.swagger_docs import HOME_GET_DOCS
 
-home_v1_bp = Blueprint('home_v1_bp', __name__)
+home_v1_bp = Blueprint("home_v1_bp", __name__)
 api = Api(home_v1_bp)
 
 
@@ -19,5 +19,4 @@ class Home(Resource):
         return "Wellcome to constellation API. Version: 1.0", HTTPStatus.OK
 
 
-api.add_resource(Home, '/api/v1/',
-                 endpoint='home')
+api.add_resource(Home, "/api/v1/", endpoint="home")

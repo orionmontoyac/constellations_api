@@ -7,7 +7,7 @@ from flasgger import swag_from
 
 import api.utils.swagger.swagger_docs as swagger_docs
 
-health_v1_bp = Blueprint('health_v1_bp', __name__)
+health_v1_bp = Blueprint("health_v1_bp", __name__)
 api = Api(health_v1_bp)
 
 
@@ -18,8 +18,10 @@ class HealthCheck(Resource):
         """
         Health check of the Constellations API.
         """
-        return "Constellations API is Healthy. Date: {}".format(datetime.now()), HTTPStatus.OK
+        return (
+            "Constellations API is Healthy. Date: {}".format(datetime.now()),
+            HTTPStatus.OK,
+        )
 
 
-api.add_resource(HealthCheck, '/api/v1/health',
-                 endpoint='health')
+api.add_resource(HealthCheck, "/api/v1/health", endpoint="health")

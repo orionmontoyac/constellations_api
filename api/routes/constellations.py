@@ -8,7 +8,7 @@ from api.schemas.schemas import ConstellationSchema
 from api.utils.error_handling import ObjectNotFound, BadInputModel
 import api.utils.swagger.swagger_docs as swagger_docs
 
-constellations_v1_bp = Blueprint('constellations_v1_bp', __name__)
+constellations_v1_bp = Blueprint("constellations_v1_bp", __name__)
 api = Api(constellations_v1_bp)
 
 # Set schemas
@@ -58,7 +58,9 @@ class Constellation(Resource):
         # Get constellation
         constellation = ConstellationModel.get_one_constellation(constellation_id)
         if constellation is None:
-            raise ObjectNotFound("Constellations with id {} not found.".format(constellation_id))
+            raise ObjectNotFound(
+                "Constellations with id {} not found.".format(constellation_id)
+            )
 
         return constellations_schema.dump(constellation), HTTPStatus.OK
 
@@ -79,7 +81,9 @@ class Constellation(Resource):
         # Get constellation
         constellation = ConstellationModel.get_one_constellation(constellation_id)
         if constellation is None:
-            raise ObjectNotFound("Constellations with id {} not found.".format(constellation_id))
+            raise ObjectNotFound(
+                "Constellations with id {} not found.".format(constellation_id)
+            )
 
         # Update constellation
         constellation_updated = constellation.update(constellation, data)
@@ -95,7 +99,9 @@ class Constellation(Resource):
         # Get constellation
         constellation = ConstellationModel.get_one_constellation(constellation_id)
         if constellation is None:
-            raise ObjectNotFound("Constellations with id {} not found.".format(constellation_id))
+            raise ObjectNotFound(
+                "Constellations with id {} not found.".format(constellation_id)
+            )
 
         # Delete constellation
         constellation.delete(constellation_id)
@@ -103,7 +109,11 @@ class Constellation(Resource):
         return "Constellation deleted", HTTPStatus.OK
 
 
-api.add_resource(ConstellationList, '/api/v1/constellations',
-                 endpoint='constellation_list')
-api.add_resource(Constellation, '/api/v1/constellation/<int:constellation_id>',
-                 endpoint='get_constellation')
+api.add_resource(
+    ConstellationList, "/api/v1/constellations", endpoint="constellation_list"
+)
+api.add_resource(
+    Constellation,
+    "/api/v1/constellation/<int:constellation_id>",
+    endpoint="get_constellation",
+)

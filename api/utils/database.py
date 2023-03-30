@@ -7,7 +7,9 @@ db = SQLAlchemy()
 class StarModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    constellation_id = db.Column(db.Integer, db.ForeignKey('constellation_model.id'), nullable=False)
+    constellation_id = db.Column(
+        db.Integer, db.ForeignKey("constellation_model.id"), nullable=False
+    )
 
     def __init__(self, name: str):
         self.name = name
@@ -18,9 +20,16 @@ class ConstellationModel(db.Model):
     name = db.Column(db.String, nullable=False)
     abbr = db.Column(db.String, nullable=False)
     right_ascension = db.Column(db.String, nullable=False)
-    stars = db.relationship('StarModel', backref='constellation_model', lazy=False, cascade='all, delete-orphan')
+    stars = db.relationship(
+        "StarModel",
+        backref="constellation_model",
+        lazy=False,
+        cascade="all, delete-orphan",
+    )
 
-    def __init__(self, name: str, abbr: str, right_ascension: str, stars: List[Dict] = None):
+    def __init__(
+        self, name: str, abbr: str, right_ascension: str, stars: List[Dict] = None
+    ):
         self.name = name
         self.abbr = abbr
         self.right_ascension = right_ascension
@@ -32,7 +41,11 @@ class ConstellationModel(db.Model):
 
     @staticmethod
     def delete(constellation_id: int):
-        constellation = db.session.query(ConstellationModel).filter(ConstellationModel.id == constellation_id).one()
+        constellation = (
+            db.session.query(ConstellationModel)
+            .filter(ConstellationModel.id == constellation_id)
+            .one()
+        )
         db.session.delete(constellation)
         db.session.commit()
 
@@ -41,7 +54,9 @@ class ConstellationModel(db.Model):
         constellation_current.name = constellation_update["name"]
         constellation_current.abbr = constellation_update["abbr"]
         constellation_current.right_ascension = constellation_update["right_ascension"]
-        constellation_current.stars = [StarModel(**star) for star in constellation_update["stars"]]
+        constellation_current.stars = [
+            StarModel(**star) for star in constellation_update["stars"]
+        ]
 
         db.session.commit()
 

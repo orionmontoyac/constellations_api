@@ -6,16 +6,17 @@ from app import create_app
 @pytest.fixture
 def client():
     app = create_app()
-    app.config.update({
-        "TESTING": True,
-    })
+    app.config.update(
+        {
+            "TESTING": True,
+        }
+    )
 
     with create_app().test_client() as client:
         yield client
 
 
 class TestHealth:
-
     def setup_method(self):
         self.health_check_url = "/api/v1/health"
 

@@ -2,7 +2,7 @@ from http import HTTPStatus
 from flask import jsonify, Blueprint
 
 
-errors_v1_bp = Blueprint('errors', __name__)
+errors_v1_bp = Blueprint("errors", __name__)
 
 
 # Exceptions
@@ -26,29 +26,20 @@ class BadInputModel(TypeError):
 # Handlers
 @errors_v1_bp.app_errorhandler(404)
 def invalid_route(e):
-    response = {
-        'message': "Invalid route.",
-        'error': e.description
-    }
+    response = {"message": "Invalid route.", "error": e.description}
 
     return jsonify(response), HTTPStatus.NOT_FOUND
 
 
 @errors_v1_bp.app_errorhandler(ObjectNotFound)
 def not_found(error):
-    response = {
-        'message': error.message,
-        'error': "Not found."
-    }
+    response = {"message": error.message, "error": "Not found."}
 
     return jsonify(response), error.status_code
 
 
 @errors_v1_bp.app_errorhandler(BadInputModel)
 def bad_input(error):
-    response = {
-        "message": error.message,
-        "error": error.errors.__str__()
-    }
+    response = {"message": error.message, "error": error.errors.__str__()}
 
     return jsonify(response), error.status_code
