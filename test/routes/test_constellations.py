@@ -1,9 +1,7 @@
-import json
-
 import pytest
 
 import test.routes.data_constellations as data_constellations
-from app import create_app
+from api.api import create_app
 from api.schemas.schemas import ConstellationSchema
 from api.utils.database import ConstellationModel
 
