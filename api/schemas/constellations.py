@@ -1,4 +1,4 @@
-from extensions import ma
+from api.utils.extensions import ma
 
 from api.models.constellations import Constellations
 from api.schemas.stars import StarsSchema

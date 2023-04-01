@@ -1,7 +1,7 @@
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from typing import List
 
-from extensions import db
+from api.utils.extensions import db
 from api.models.stars import Stars
 
 

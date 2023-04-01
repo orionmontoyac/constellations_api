@@ -1,4 +1,4 @@
-from extensions import ma
+from api.utils.extensions import ma
 
 from api.models.stars import Stars
 from api.api import db

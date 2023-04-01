@@ -1,6 +1,6 @@
 from flask import Flask
 import config
-from extensions import db, ma, migrate, swagger
+from api.utils.extensions import db, ma, migrate, swagger
 from api.routes.home import home_v1_bp
 from api.routes.health_check import health_v1_bp
 from api.routes.constellations import constellations_v1_bp
