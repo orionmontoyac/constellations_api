@@ -2,17 +2,21 @@ from http import HTTPStatus
 from flask import request, Blueprint
 from flask_restful import Api, Resource
 from flasgger import swag_from
+from marshmallow import ValidationError
 
+from api.api import db
 from api.utils.database import ConstellationModel
-from api.schemas.schemas import ConstellationSchema
+from api.schemas.constellations import ConstellationsSchema
 from api.utils.error_handling import ObjectNotFound, BadInputModel
 import api.utils.swagger.swagger_docs as swagger_docs
+import api.controllers.constellations as constellations_controller
+
 
 constellations_v1_bp = Blueprint("constellations_v1_bp", __name__)
 api = Api(constellations_v1_bp)
 
 # Set schemas
-constellations_schema = ConstellationSchema()
+
 
 
 class ConstellationList(Resource):
@@ -23,7 +27,7 @@ class ConstellationList(Resource):
         GET all constellations.
         RETURN List of Constellations List[ConstellationModel]
         """
-        constellations = ConstellationModel.get_all_constellations()
+        constellations = constellations_controller.get_all()
         return constellations_schema.dump(constellations, many=True), HTTPStatus.OK
 
     @staticmethod
@@ -33,18 +37,20 @@ class ConstellationList(Resource):
         POST add 1 or more constellations.
         BODY List of Constellations List[ConstellationModel]
         """
+        constellations_schema = ConstellationsSchema()
         data = request.get_json()
+        constellations_added = []
         for constellation_raw in data:
             # Check constellation model
             try:
-                constellation = ConstellationModel(**constellation_raw)
-            except TypeError as e:
+                constellations = constellations_schema.load(constellation_raw, session=db.session)
+            except ValidationError as e:
                 raise BadInputModel(message="Input validation error.", errors=e)
 
             # Save constellation to DB
-            constellation.save()
+            constellations_added = constellations_controller.create(constellations)
 
-        return "Constellation(s) saved", HTTPStatus.CREATED
+        return constellations_added, HTTPStatus.CREATED
 
 
 class Constellation(Resource):

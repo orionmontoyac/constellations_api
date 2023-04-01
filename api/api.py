@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flasgger import Swagger
 
 import config
-from api.utils.database import db
+from api import db
 from api.routes.home import home_v1_bp
 from api.routes.health_check import health_v1_bp
 from api.routes.constellations import constellations_v1_bp
