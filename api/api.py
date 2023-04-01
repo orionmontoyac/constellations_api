@@ -1,9 +1,6 @@
 from flask import Flask
-from flask_migrate import Migrate
-from flasgger import Swagger
-
 import config
-from api import db
+from extensions import db, ma, migrate, swagger
 from api.routes.home import home_v1_bp
 from api.routes.health_check import health_v1_bp
 from api.routes.constellations import constellations_v1_bp
@@ -20,26 +17,28 @@ from api.utils.error_handling import errors_v1_bp
 
 
 def create_app() -> Flask:
-    new_app = Flask(__name__)
+    app = Flask(__name__)
     # Initialize Config
-    new_app.config.from_object(config.DevelopmentConfig)
+    app.config.from_object(config.DevelopmentConfig)
 
     # swagger docs
-    swagger = Swagger(new_app)
+    swagger.init_app(app)
+    
     # config data base
-    db.init_app(new_app)
-    Migrate(new_app, db, render_as_batch=True)
+    db.init_app(app)
+    ma.init_app(app)
+    migrate.init_app(app)
 
-    # Blue prints
-    new_app.register_blueprint(home_v1_bp)
-    new_app.register_blueprint(health_v1_bp)
-    new_app.register_blueprint(constellations_v1_bp)
-    new_app.register_blueprint(stars_v1_bp)
+    # Blueprints
+    app.register_blueprint(home_v1_bp)
+    app.register_blueprint(health_v1_bp)
+    app.register_blueprint(constellations_v1_bp)
+    app.register_blueprint(stars_v1_bp)
 
     # Custom error handlers
-    new_app.register_blueprint(errors_v1_bp)
+    app.register_blueprint(errors_v1_bp)
 
-    return new_app
+    return app
 
 
 if __name__ == "__main__":

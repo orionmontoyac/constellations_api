@@ -15,9 +15,6 @@ import api.controllers.constellations as constellations_controller
 constellations_v1_bp = Blueprint("constellations_v1_bp", __name__)
 api = Api(constellations_v1_bp)
 
-# Set schemas
-
-
 
 class ConstellationList(Resource):
     @staticmethod
@@ -27,8 +24,10 @@ class ConstellationList(Resource):
         GET all constellations.
         RETURN List of Constellations List[ConstellationModel]
         """
+        constellations_schema = ConstellationsSchema()
+
         constellations = constellations_controller.get_all()
-        return constellations_schema.dump(constellations, many=True), HTTPStatus.OK
+        return constellations_schema.jsonify(constellations, many=True)
 
     @staticmethod
     @swag_from(swagger_docs.CONSTELLATIONS_LIST_POST_DOCS)

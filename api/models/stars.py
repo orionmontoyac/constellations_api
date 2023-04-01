@@ -1,7 +1,7 @@
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy import ForeignKey
 
-from api import db
+from extensions import db
 
 
 class Stars(db.Model):
