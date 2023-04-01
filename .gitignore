@@ -2,3 +2,4 @@ __pycache__
 /migrations/
 /instance/
 /api_database/postgres-data/
+/api_database/.env
