@@ -1,11 +1,11 @@
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from typing import List
 
-from api import db, Base
+from api import db
 from api.models.stars import Stars
 
 
-class Constellations(Base):
+class Constellations(db.Model):
     __tablename__ = "constellations"
 
     id: Mapped[int] = mapped_column(primary_key=True)

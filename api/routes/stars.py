@@ -5,14 +5,14 @@ from flasgger import swag_from
 
 from api.utils.database import ConstellationModel
 from api.utils.database import StarModel
-from api.schemas.schemas import StarSchema
+from api.schemas.stars import StarsSchema
 from api.utils.error_handling import ObjectNotFound
 import api.utils.swagger.swagger_docs as swagger_docs
 
 stars_v1_bp = Blueprint("stars_v1_bp", __name__)
 api = Api(stars_v1_bp)
 
-stars_schema = StarSchema()
+stars_schema = StarsSchema()
 
 
 class StarList(Resource):

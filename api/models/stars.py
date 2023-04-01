@@ -1,10 +1,10 @@
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy import ForeignKey
 
-from api import db, Base
+from api import db
 
 
-class Stars(Base):
+class Stars(db.Model):
     __tablename__ = "stars"
 
     id: Mapped[int] = mapped_column(primary_key=True)

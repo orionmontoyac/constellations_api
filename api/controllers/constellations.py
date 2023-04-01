@@ -3,9 +3,12 @@ from api.models.constellations import Constellations
 
 
 def get_all():
-    return Constellations.query.order_by('name').all()
+    response = Constellations.query.all()
+    return response
 
 
-def create(constellations: dict) -> list:
+def create(constellations: dict) -> str:
     db.session.add(constellations)
     db.session.commit()
+
+    return 'Created successfully'
