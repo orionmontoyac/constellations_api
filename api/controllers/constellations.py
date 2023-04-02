@@ -7,8 +7,6 @@ def get_all():
     return response
 
 
-def create(constellations: dict) -> str:
+def create(constellations: dict):
     db.session.add(constellations)
     db.session.commit()
-
-    return 'Created successfully'

@@ -8,5 +8,6 @@ class StarsSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Stars
         include_relationships = True
+        load_instance = True
         sqla_session = db.session
         fields = ('name', 'id')

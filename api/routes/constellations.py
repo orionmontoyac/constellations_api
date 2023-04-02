@@ -37,19 +37,22 @@ class ConstellationList(Resource):
         BODY List of Constellations List[ConstellationModel]
         """
         constellations_schema = ConstellationsSchema()
-        data = request.get_json()
-        constellations_added = []
+        data = request.json
+
+        if not data:
+            return "json parameter is required", HTTPStatus.BAD_REQUEST
+
         for constellation_raw in data:
             # Check constellation model
             try:
-                constellations = constellations_schema.load(constellation_raw, session=db.session)
+                constellation = constellations_schema.load(constellation_raw, session=db.session)
             except ValidationError as e:
                 raise BadInputModel(message="Input validation error.", errors=e)
 
             # Save constellation to DB
-            constellations_added = constellations_controller.create(constellations)
+            constellations_controller.create(constellation)
 
-        return constellations_added, HTTPStatus.CREATED
+        return 'Constellation(s) created successfully', HTTPStatus.CREATED
 
 
 class Constellation(Resource):
