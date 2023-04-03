@@ -3,9 +3,8 @@ from flask import Blueprint
 from flask_restful import Api, Resource
 from flasgger import swag_from
 
-from api.utils.database import ConstellationModel
-from api.utils.database import StarModel
 from api.schemas.stars import StarsSchema
+import api.controllers.stars as stars_controller
 from api.utils.error_handling import ObjectNotFound
 import api.utils.swagger.swagger_docs as swagger_docs
 
@@ -23,16 +22,15 @@ class StarList(Resource):
         GET all stars from a constellation by id
         RETURN list of stars List[StarModel]
         """
-        # Get constellation
-        constellation = ConstellationModel.query.get(constellation_id)
-        if constellation is None:
-            raise ObjectNotFound(
-                "Constellations with id {} not found.".format(constellation_id)
-            )
-        # Get stars
-        stars = constellation.stars
 
-        return stars_schema.dump(stars, many=True), HTTPStatus.OK
+        stars_schema = StarsSchema()
+        # Get stars
+        stars = stars_controller.get_all(constellation_id)
+
+        response = stars_schema.jsonify(stars, many=True)
+        response.status_code = HTTPStatus.OK
+
+        return response
 
 
 class Star(Resource):
@@ -43,10 +41,8 @@ class Star(Resource):
         GET one single star from a constellation
         RETURN one single star StarModel
         """
-        # Get constellation
-        star = StarModel.query.filter_by(
-            constellation_id=constellation_id, id=star_id
-        ).first()
+
+        star = stars_controller.get_one(constellation_id, star_id)
 
         if star is None:
             raise ObjectNotFound(
@@ -55,7 +51,12 @@ class Star(Resource):
                 )
             )
 
-        return stars_schema.dump(star, many=False), HTTPStatus.OK
+        stars_schema = StarsSchema()
+
+        response = stars_schema.jsonify(star)
+        response.status_code = HTTPStatus.OK
+
+        return response
 
 
 api.add_resource(
@@ -63,6 +64,6 @@ api.add_resource(
 )
 api.add_resource(
     Star,
-    "/api/v1/constellation/<int:constellation_id>/stars/<int:star_id>",
+    "/api/v1/constellation/<int:constellation_id>/star/<int:star_id>",
     endpoint="star",
 )

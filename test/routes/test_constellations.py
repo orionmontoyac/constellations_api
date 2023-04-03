@@ -2,8 +2,8 @@ import pytest
 
 import test.routes.data_constellations as data_constellations
 from api.api import create_app
-from api.schemas.schemas import ConstellationSchema
-from api.utils.database import ConstellationModel
+from api.schemas.constellations import ConstellationsSchema
+from api.models.constellations import Constellations
 
 
 @pytest.fixture
@@ -26,7 +26,7 @@ class TestConstellation:
 
     def test_get_all_constellations_ok(self, client, mocker):
         mock = mocker.patch(
-            "api.utils.database.ConstellationModel.get_all_constellations"
+            "api.controllers.constellations.get_all"
         )
         mock.return_value = data_constellations.ALL_CONSTELLATIONS_RESPONSE
 
@@ -34,11 +34,11 @@ class TestConstellation:
 
         assert response.status_code == 200
         # Check data response schema
-        constellation_schema = ConstellationSchema()
+        constellation_schema = ConstellationsSchema()
         constellation_schema.load(response.get_json(), many=True)
 
     def test_post_create_constellations_ok(self, client, mocker):
-        mocker.patch("api.utils.database.ConstellationModel.save")
+        mocker.patch("api.controllers.constellations.create")
 
         response = client.post(
             self.constellations_url, json=data_constellations.NEW_CONSTELLATION_REQUEST
@@ -49,7 +49,7 @@ class TestConstellation:
 
     def test_get_constellation_id_ok(self, client, mocker):
         mock = mocker.patch(
-            "api.utils.database.ConstellationModel.get_one_constellation"
+            "api.controllers.constellations.get_one"
         )
         mock.return_value = data_constellations.ALL_CONSTELLATIONS_RESPONSE[0]
 
@@ -57,7 +57,7 @@ class TestConstellation:
 
         assert response.status_code == 200
         # Check data response schema
-        constellation_schema = ConstellationSchema()
+        constellation_schema = ConstellationsSchema()
         constellation_schema.load(response.get_json())
 
     def test_get_constellation_bad_id(self, client):
@@ -71,7 +71,7 @@ class TestConstellation:
 
     def test_get_constellation_id_not_found(self, client, mocker):
         mock = mocker.patch(
-            "api.utils.database.ConstellationModel.get_one_constellation"
+            "api.controllers.constellations.get_one"
         )
         mock.return_value = None
         constellation_id = 99
@@ -83,14 +83,13 @@ class TestConstellation:
 
     def test_put_constellation_id_ok(self, client, mocker):
         mock = mocker.patch(
-            "api.utils.database.ConstellationModel.get_one_constellation"
+            "api.controllers.constellations.get_one"
         )
-        mock.return_value = ConstellationModel(
-            **data_constellations.NEW_CONSTELLATION_REQUEST[0]
-        )
+        constellations_schema = ConstellationsSchema()
+        mock.return_value = constellations_schema.load(data_constellations.NEW_CONSTELLATION_REQUEST[0])
 
-        mock = mocker.patch("api.utils.database.ConstellationModel.update")
-        mock.return_value = data_constellations.ALL_CONSTELLATIONS_RESPONSE[0]
+        mock = mocker.patch("api.controllers.constellations.update")
+        mock.return_value = None
 
         response = client.put(
             "{}/{}".format(self.constellation_url, 1),
@@ -99,12 +98,12 @@ class TestConstellation:
 
         assert response.status_code == 200
         # Check data response schema
-        constellation_schema = ConstellationSchema()
+        constellation_schema = ConstellationsSchema()
         constellation_schema.load(response.get_json())
 
     def test_put_constellation_id_not_found(self, client, mocker):
         mock = mocker.patch(
-            "api.utils.database.ConstellationModel.get_one_constellation"
+            "api.controllers.constellations.get_one"
         )
         mock.return_value = None
 
@@ -121,9 +120,9 @@ class TestConstellation:
 
     def test_put_constellation_id_bad_input(self, client, mocker):
         mock = mocker.patch(
-            "api.utils.database.ConstellationModel.get_one_constellation"
+            "api.controllers.constellations.get_one"
         )
-        mock.return_value = ConstellationModel(
+        mock.return_value = Constellations(
             **data_constellations.NEW_CONSTELLATION_REQUEST[0]
         )
         constellation_id = 99
@@ -139,13 +138,13 @@ class TestConstellation:
 
     def test_delete_constellation_id_ok(self, client, mocker):
         mock = mocker.patch(
-            "api.utils.database.ConstellationModel.get_one_constellation"
+            "api.controllers.constellations.get_one"
         )
-        mock.return_value = ConstellationModel(
+        mock.return_value = Constellations(
             **data_constellations.NEW_CONSTELLATION_REQUEST[0]
         )
 
-        mock = mocker.patch("api.utils.database.ConstellationModel.delete")
+        mock = mocker.patch("api.controllers.constellations.delete")
         mock.return_value = {}
 
         response = client.delete("{}/{}".format(self.constellation_url, 1))
@@ -154,7 +153,7 @@ class TestConstellation:
 
     def test_delete_constellation_id_not_found(self, client, mocker):
         mock = mocker.patch(
-            "api.utils.database.ConstellationModel.get_one_constellation"
+            "api.controllers.constellations.get_one"
         )
         mock.return_value = None
         constellation_id = 99
