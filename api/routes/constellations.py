@@ -5,7 +5,6 @@ from flasgger import swag_from
 from marshmallow import ValidationError
 
 from api.api import db
-from api.utils.database import ConstellationModel
 from api.schemas.constellations import ConstellationsSchema
 from api.utils.error_handling import ObjectNotFound, BadInputModel
 import api.utils.swagger.swagger_docs as swagger_docs
@@ -27,7 +26,10 @@ class ConstellationList(Resource):
         constellations_schema = ConstellationsSchema()
 
         constellations = constellations_controller.get_all()
-        return constellations_schema.jsonify(constellations, many=True)
+        response = constellations_schema.jsonify(constellations, many=True)
+        response.status_code = HTTPStatus.OK
+
+        return response
 
     @staticmethod
     @swag_from(swagger_docs.CONSTELLATIONS_LIST_POST_DOCS)
@@ -52,7 +54,7 @@ class ConstellationList(Resource):
             # Save constellation to DB
             constellations_controller.create(constellation)
 
-        return 'Constellation(s) created successfully', HTTPStatus.CREATED
+        return 'Constellation(s) saved', HTTPStatus.CREATED
 
 
 class Constellation(Resource):
@@ -63,14 +65,19 @@ class Constellation(Resource):
         GET on constellation by id number
         RETURN one single constellation ConstellationModel
         """
-        # Get constellation
-        constellation = ConstellationModel.get_one_constellation(constellation_id)
+        constellation = constellations_controller.get_one(constellation_id)
+
         if constellation is None:
             raise ObjectNotFound(
                 "Constellations with id {} not found.".format(constellation_id)
             )
 
-        return constellations_schema.dump(constellation), HTTPStatus.OK
+        constellations_schema = ConstellationsSchema()
+
+        response = constellations_schema.jsonify(constellation)
+        response.status_code = HTTPStatus.OK
+
+        return response
 
     @staticmethod
     @swag_from(swagger_docs.CONSTELLATION_PUT_DOCS)
@@ -79,24 +86,29 @@ class Constellation(Resource):
         UPDATE one single constellation by id number
         BODY one constellation ConstellationModel
         """
-        data = request.get_json()
-        # Check constellation model
-        try:
-            ConstellationModel(**data)
-        except TypeError as e:
-            raise BadInputModel(message="Input validation error.", errors=e)
-
-        # Get constellation
-        constellation = ConstellationModel.get_one_constellation(constellation_id)
-        if constellation is None:
+        # Check if constellations exits
+        current_constellation = constellations_controller.get_one(constellation_id)
+        if current_constellation is None:
             raise ObjectNotFound(
                 "Constellations with id {} not found.".format(constellation_id)
             )
 
-        # Update constellation
-        constellation_updated = constellation.update(constellation, data)
+        constellations_schema = ConstellationsSchema()
+        data = request.json
+        # Check constellation model
+        try:
+            update_constellation = constellations_schema.load(
+                data, session=db.session, instance=current_constellation, partial=True)
+        except ValidationError as e:
+            raise BadInputModel(message="Input validation error.", errors=e)
 
-        return constellations_schema.dump(constellation_updated), HTTPStatus.OK
+        # Update constellation
+        constellations_controller.update()
+
+        response = constellations_schema.jsonify(update_constellation)
+        response.status_code = HTTPStatus.OK
+
+        return response
 
     @staticmethod
     @swag_from(swagger_docs.CONSTELLATION_DELETE_DOCS)
@@ -104,15 +116,15 @@ class Constellation(Resource):
         """
         DELETE on single constellation by id
         """
-        # Get constellation
-        constellation = ConstellationModel.get_one_constellation(constellation_id)
-        if constellation is None:
+        # Check if constellations exits
+        current_constellation = constellations_controller.get_one(constellation_id)
+        if current_constellation is None:
             raise ObjectNotFound(
                 "Constellations with id {} not found.".format(constellation_id)
             )
 
         # Delete constellation
-        constellation.delete(constellation_id)
+        constellations_controller.delete(current_constellation)
 
         return "Constellation deleted", HTTPStatus.OK
 
