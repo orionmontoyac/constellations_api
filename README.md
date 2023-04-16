@@ -1,4 +1,9 @@
 # Constellations API made in Flask
+The Constellations project is an API that utilizes REST architecture, developed in Python with the Flask web micro framework. 
+The main purpose of this project is to improve my backend skills while coding it. 
+It is a great opportunity to gain hands-on experience in creating an API, 
+and to learn how to utilize different technologies and architectural patterns. 
+Additionally, the project can serve as a starting point for anyone interested in developing a RESTful API with Flask.
 
 ### Run with docker
 ```
